@@ -1,4 +1,4 @@
-# ComputerSecurity
+# Computer Security
 
 A central location for my Computer Security CS419 projects.
 
