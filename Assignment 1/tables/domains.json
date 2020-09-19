@@ -1,0 +1,24 @@
+{
+     "admins": {
+          "Name": "admins",
+          "AccessPermissions": [],
+          "Users": [
+               "Alfonso",
+               "kt"
+          ]
+     },
+     "mods": {
+          "Name": "mods",
+          "AccessPermissions": [],
+          "Users": [
+               "Alfonso"
+          ]
+     },
+     "plus": {
+          "Name": "plus",
+          "AccessPermissions": [],
+          "Users": [
+               "Alfonso"
+          ]
+     }
+}

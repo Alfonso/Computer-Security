@@ -1,0 +1,18 @@
+{
+     "Alfonso": {
+          "UserName": "Alfonso",
+          "Password": "butts",
+          "Domains": [
+               "admins",
+               "mods",
+               "plus"
+          ]
+     },
+     "kt": {
+          "UserName": "kt",
+          "Password": "butts",
+          "Domains": [
+               "admins"
+          ]
+     }
+}
