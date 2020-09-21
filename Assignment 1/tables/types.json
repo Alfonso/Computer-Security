@@ -1,8 +1,26 @@
 {
-     "Athletes": {
-          "Name": "Athletes",
+     "porn": {
+          "Name": "porn",
           "Objects": [
-               "Ronaldo"
+               "lesbian",
+               "bsm",
+               "gay",
+               "biracial",
+               "hentai"
           ]
+     },
+     "news": {
+          "Name": "news",
+          "Objects": [
+               "nbc",
+               "abc",
+               "fox",
+               "cnn",
+               "cbs"
+          ]
+     },
+     "comedy": {
+          "Name": "comedy",
+          "Objects": []
      }
 }

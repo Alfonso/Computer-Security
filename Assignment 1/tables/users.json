@@ -1,18 +1,30 @@
 {
-     "Alfonso": {
-          "UserName": "Alfonso",
-          "Password": "butts",
+     "Andi": {
+          "UserName": "Andi",
+          "Password": "Alice",
           "Domains": [
-               "admins",
-               "mods",
-               "plus"
+               "slave"
           ]
      },
-     "kt": {
-          "UserName": "kt",
-          "Password": "butts",
+     "Kt": {
+          "UserName": "Kt",
+          "Password": "Chocolate",
           "Domains": [
-               "admins"
+               "admin",
+               "master",
+               "slave_boy"
+          ]
+     },
+     "Ali": {
+          "UserName": "Ali",
+          "Password": "DnD",
+          "Domains": []
+     },
+     "Alfonso": {
+          "UserName": "Alfonso",
+          "Password": "Butts",
+          "Domains": [
+               "admin"
           ]
      }
 }

@@ -1,24 +1,32 @@
 {
-     "admins": {
-          "Name": "admins",
-          "AccessPermissions": [],
+     "admin": {
+          "Name": "admin",
           "Users": [
                "Alfonso",
-               "kt"
+               "Kt"
           ]
      },
-     "mods": {
-          "Name": "mods",
-          "AccessPermissions": [],
+     "master": {
+          "Name": "master",
           "Users": [
-               "Alfonso"
+               "Kt"
           ]
      },
-     "plus": {
-          "Name": "plus",
-          "AccessPermissions": [],
+     "slave": {
+          "Name": "slave",
           "Users": [
-               "Alfonso"
+               "Andi"
           ]
+     },
+     "slave_boy": {
+          "Name": "slave_boy",
+          "Users": [
+               "Kt"
+          ]
+     },
+     "losers": {
+          "Name": "losers",
+          "AccessPermissions": [],
+          "Users": []
      }
 }

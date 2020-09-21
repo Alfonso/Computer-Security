@@ -64,6 +64,19 @@ def check_type(type_name):
         return False
     return False
 
+def check_permission(operation):
+    if not path.exists( './tables/permissions.json' ):
+        return False
+    f = open( './tables/permissions.json' )
+    try:
+        types = json.load(f)
+        if operation in types:
+            return True
+    except JSONDecodeError:
+        return False
+    return False
+
+
 '''
 AddUser
 Params:
@@ -177,7 +190,7 @@ def set_domain(username, domain_name):
 
         # domain is not in the table. So add it
         if domain_name not in domains:
-            domains[domain_name] = {"Name" : domain_name, "AccessPermissions" : [], "Users" : [username]}
+            domains[domain_name] = {"Name" : domain_name,  "Users" : [username]}
         else:
             # add user to the current domain
             if username not in domains[domain_name]["Users"]:
@@ -187,7 +200,7 @@ def set_domain(username, domain_name):
 
     except JSONDecodeError:
         # file is empty
-        domains = { domain_name : {"Name" : domain_name, "AccessPermissions" : [], "Users" : [username]} }
+        domains = { domain_name : {"Name" : domain_name, "Users" : [username]} }
         f = open( "./tables/domains.json", "w+" )
         json.dump( domains, f, indent=5 )
 
@@ -232,8 +245,7 @@ def domain_info(domain_name):
         if domain_name in domains:
             # loop through the length of users
             for user in domains[domain_name]["Users"]:
-                print(user, end=" ")
-            print("")
+                print(user)
 
     except JSONDecodeError:
         exit()
@@ -316,8 +328,7 @@ def type_info(type_name):
         if type_name in types:
             # loop through the length of users
             for _object in types[type_name]["Objects"]:
-                print(_object, end=" ")
-            print("")
+                print(_object)
 
     except JSONDecodeError:
         exit()
@@ -378,6 +389,44 @@ def add_access(operation, domain_name, type_name):
         f = open( "./tables/types.json", "w+" )
         json.dump( types, f, indent=5 )
 
+    
+    # check if the permissions json exists
+    if not path.exists( './tables/permissions.json' ):
+        open( "./tables/permissions.json", "w+" )
+    
+    f = open( "./tables/permissions.json", "r" )
+    try:
+        permissions = json.load( f )
+        # File is not empty
+
+        # check if permission exists
+        if operation not in permissions:
+            # add operation into permissions
+            permissions[operation] = { "Name" : operation, "Domains" : { domain_name : [type_name]} }
+        else:
+            
+            # check if the domain exists already
+            if domain_name in permissions[operation]["Domains"]:
+                # check if the type exists already
+                if type_name not in permissions[operation]["Domains"][domain_name]:
+                    # append the new type to the list
+                    permissions[operation]["Domains"][domain_name].append(type_name)
+            else:
+                # New domain so create new list
+                permissions[operation]["Domains"][domain_name] = [type_name]
+
+
+    except JSONDecodeError:
+        # File is empty
+        permissions = { operation : { "Name" : operation, "Domains" : { domain_name : [type_name] } } }
+
+    f = open( "./tables/permissions.json", "w+" )
+    json.dump( permissions, f, indent=5 )
+
+    # add it to the Access Permissions in the Domain
+
+
+
     print("Success")
     
 '''
@@ -388,8 +437,102 @@ Returns:
 
 Todo:
 '''
-def can_access(opertion, username, object):
-    print('can access')
+def can_access(operation, username, object_name):
+    
+    if username == "":
+        print("Username is empty")
+        exit()
+    if object_name == "":
+        print("Object name is empty")
+        exit()
+    if operation == "":
+        print("Operation name is empty")
+        exit()
+
+    # check if the file exists
+    if not path.exists( './tables/users.json' ):
+        open( "./tables/users.json", "w+" )
+        exit()
+
+    if not check_user(username):
+        print("Username is not valid")
+        exit()
+
+    # Check what domains the user is a part of
+    f = open( "./tables/users.json", "r" )
+    try:
+        users = json.load( f )
+
+        user_domains = users[username]["Domains"]
+
+    except JSONDecodeError:
+        # file is empty
+        print("Username is not valid")
+        exit()
+
+
+    # check if the file exists
+    if not path.exists( './tables/permissions.json' ):
+        open( "./tables/permission.json", "w+" )
+        exit()
+
+    if not check_permission(operation):
+        print("Operation is not valid")
+        exit()
+
+    # check what domains are associated with that operation
+    f = open( "./tables/permissions.json", "r" )
+    try:
+        permissions = json.load( f )
+
+        permission_domains = permissions[operation]["Domains"]
+
+    except JSONDecodeError:
+        # file is empty
+        print("Operaton is not valid")
+        exit()
+        
+    # check which of the user_domains are in permission domains
+    shared_domains = []
+    for u_domain in user_domains:
+        if u_domain in permission_domains:
+            shared_domains.append(u_domain)
+
+    # print("shared domains: {}".format(shared_domains))
+
+    # Using shared domains, find the types associated
+    shared_types = []
+    for s_domain in shared_domains:
+        for _type in permission_domains[s_domain]:
+            # check if we already have the type in our list
+            # check if it exists in our types json
+            if _type not in shared_types and check_type(_type):
+                shared_types.append(_type)
+    # print("shared types: {}".format(shared_types))
+
+    # get the types
+    # check if the file exists
+    if not path.exists( './tables/types.json' ):
+        open( "./tables/types.json", "w+" )
+        exit()
+    
+    # get types
+    f = open( "./tables/types.json", "r" )
+    try:
+        types = json.load( f )
+
+    except JSONDecodeError:
+        # file is empty
+        print("Object is not valid")
+        exit()
+
+    # go through all of the shared types and see if object exists in it
+    for _type in shared_types:
+        if object_name in types[_type]["Objects"]:
+            print("Success")
+            exit()
+    print("Error: Access Denied")
+
 
 
 if __name__ == '__main__':
