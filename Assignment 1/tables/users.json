@@ -26,5 +26,10 @@
           "Domains": [
                "admin"
           ]
+     },
+     "Kuber": {
+          "UserName": "Kuber",
+          "Password": "",
+          "Domains": []
      }
 }

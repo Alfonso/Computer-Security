@@ -9,5 +9,13 @@
                     "comedy"
                ]
           }
+     },
+     "edit": {
+          "Name": "edit",
+          "Domains": {
+               "losers": [
+                    "comedy"
+               ]
+          }
      }
 }

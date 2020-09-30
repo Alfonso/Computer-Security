@@ -8,24 +8,81 @@ def main():
 
     # error check argument lengths?
     if len(sys.argv) < 2:
-        print('Please provide proper input')
-        exit()
+        print('Error: Please provide proper input')
+        return
     elif sys.argv[1] == 'AddUser' and len(sys.argv) == 4:
         add_user( sys.argv[2], sys.argv[3] )
+    elif sys.argv[1] == 'AddUser' and len(sys.argv) != 4:
+        if len(sys.argv) < 4:
+            print("Error: too few arguments - ",end="")
+        else:
+            print("Error: too many arguements - ",end="")
+        print("usage: AddUser name password")
+
     elif sys.argv[1] == 'Authenticate' and len(sys.argv) == 4:
         authenticate( sys.argv[2], sys.argv[3] )
+    elif sys.argv[1] == 'Authenticate' and len(sys.argv) != 4:
+        if len(sys.argv) < 4:
+            print("Error: too few arguments - ",end="")
+        else:
+            print("Error: too many arguements - ",end="")
+        print("usage: Authenticate name password")
+
     elif sys.argv[1] == 'SetDomain' and len(sys.argv) == 4:
         set_domain( sys.argv[2], sys.argv[3] )
+    elif sys.argv[1] == 'SetDomain' and len(sys.argv) != 4:
+        if len(sys.argv) < 4:
+            print("Error: too few arguments - ",end="")
+        else:
+            print("Error: too many arguements - ",end="")
+        print("usage: SetDomain user domain")
+
     elif sys.argv[1] == 'DomainInfo' and len(sys.argv) == 3:
         domain_info( sys.argv[2] )
+    elif sys.argv[1] == 'DomainInfo' and len(sys.argv) != 3:
+        if len(sys.argv) < 3:
+            print("Error: too few arguments - ",end="")
+        else:
+            print("Error: too many arguements - ",end="")
+        print("usage: DomainInfo domain")
+
     elif sys.argv[1] == 'SetType' and len(sys.argv) == 4:
         set_type( sys.argv[2], sys.argv[3] )
+    elif sys.argv[1] == 'SetType' and len(sys.argv) != 4:
+        if len(sys.argv) < 4:
+            print("Error: too few arguments - ",end="")
+        else:
+            print("Error: too many arguements - ",end="")
+        print("usage: SetType object type")
+
     elif sys.argv[1] == 'TypeInfo' and len(sys.argv) == 3:
         type_info( sys.argv[2] )
+    elif sys.argv[1] == 'TypeInfo' and len(sys.argv) != 3:
+        if len(sys.argv) < 3:
+            print("Error: too few arguments - ",end="")
+        else:
+            print("Error: too many arguements - ",end="")
+        print("usage: TypeInfo type")
+
     elif sys.argv[1] == 'AddAccess' and len(sys.argv) == 5:
         add_access( sys.argv[2], sys.argv[3], sys.argv[4] )
+    elif sys.argv[1] == 'AddAccess' and len(sys.argv) != 5:
+        if len(sys.argv) < 5:
+            print("Error: too few arguments - ",end="")
+        else:
+            print("Error: too many arguements - ",end="")
+        print("usage: AddAccess operation domain type")
+
     elif sys.argv[1] == 'CanAccess' and len(sys.argv) == 5:
         can_access( sys.argv[2], sys.argv[3], sys.argv[4] )
+    elif sys.argv[1] == 'CanAccess' and len(sys.argv) != 5:
+        if len(sys.argv) < 5:
+            print("Error: too few arguments - ",end="")
+        else:
+            print("Error: too many arguements - ",end="")
+        print("usage: CanAccess operation user object")
+    else:
+        print("Error: invalid command")
 
 # Helpers
 def check_user(username):
@@ -86,7 +143,10 @@ Returns:
 Todo:
 '''
 def add_user(username, password):
-    # print('adding user')
+    # check if username is blank
+    if username == "":
+        print("Error: Empty username")
+        return
 
     # check if the file exists
     if not path.exists( './tables/users.json' ):
@@ -100,8 +160,8 @@ def add_user(username, password):
 
         # need to check if the user already exists
         if check_user(username):
-            print('Username in use') 
-            exit()
+            print('Error: Username in use') 
+            return
 
         # add the new user
         users[username] = { "UserName" : username, "Password" : password, "Domains" : [] }
@@ -113,7 +173,6 @@ def add_user(username, password):
         json.dump( users, f, indent=5 )
 
     except JSONDecodeError:
-        # print('file empty')
         # need to write to file now
         f = open( "./tables/users.json", "w+" )
         # if the file is empty create a new dict
@@ -134,8 +193,8 @@ Todo:
 def authenticate(username, password):
     # check if the file exists
     if not path.exists( './tables/users.json' ):
-        print("No such user")
-        exit()
+        print("Error: No such user")
+        return
     
     f = open( "./tables/users.json", "r" )
 
@@ -145,15 +204,15 @@ def authenticate(username, password):
 
         if username in users:
             if users[username]["Password"] != password:
-                print("Bad password")
-                exit()
+                print("Error: Bad password")
+                return
         else:
-            print("No such user")
-            exit()
+            print("Error: No such user")
+            return
 
     except JSONDecodeError:
-        print("No such user")
-        exit()
+        print("Error: No such user")
+        return
     
     print("Success")
 
@@ -169,13 +228,13 @@ def set_domain(username, domain_name):
     
     # check if domain name is empty
     if domain_name == '':
-        print("Missing domain")
-        exit()
+        print("Error: Missing domain")
+        return
 
     # check if the user exists
     if not check_user(username):
-        print("No such user")
-        exit()
+        print("Error: No such user")
+        return
 
     # check if the file exists
     if not path.exists( './tables/domains.json' ):
@@ -222,19 +281,17 @@ Params:
 Returns:
 
 Todo:
-    Do I need a comma when listing?
-    Can I just print out the list?
 '''
 def domain_info(domain_name):
     # check if the domain name is empty
     if domain_name == "":
-        print("Missing domain")
-        exit()
+        print("Error: Missing domain")
+        return
 
     # check if the file exists
     if not path.exists( './tables/domains.json' ):
         open( "./tables/domains.json", "w+" )
-        exit()
+        return
 
     f = open( './tables/domains.json', 'r' )
     
@@ -248,7 +305,7 @@ def domain_info(domain_name):
                 print(user)
 
     except JSONDecodeError:
-        exit()
+        return
 
 
 '''
@@ -262,11 +319,11 @@ Todo:
 '''
 def set_type(object_name, type_name):
     if object_name == "":
-        print("Object name is empty")
-        exit()
+        print("Error: Object name is empty")
+        return
     if type_name == "":
-        print("Type name is empty")
-        exit()
+        print("Error: Type name is empty")
+        return
 
     # check if the file exists
     if not path.exists( './tables/types.json' ):
@@ -283,8 +340,7 @@ def set_type(object_name, type_name):
                 # add the object to the existing type
                 types[type_name]["Objects"].append( object_name )
             else:
-                print("Object already exists in type")
-                exit()
+                return
         else:
             # Create the type and add the object
             types[type_name] = { "Name" : type_name, "Objects" : [object_name] }
@@ -305,19 +361,17 @@ Params:
 Returns:
 
 Todo:
-    Do I need a comma when listing?
-    Can I just print out the list?
 '''
 def type_info(type_name):
     # check that type_name is not empty
     if type_name == "":
-        print("Type name is empty")
-        exit()
+        print("Error: Type name is empty")
+        return
     
     # check if the file exists
     if not path.exists( './tables/types.json' ):
         open( "./tables/types.json", "w+" )
-        exit()
+        return
 
     f = open( './tables/types.json', 'r' )
 
@@ -331,7 +385,7 @@ def type_info(type_name):
                 print(_object)
 
     except JSONDecodeError:
-        exit()
+        return
 
 '''
 AddAccess
@@ -344,14 +398,14 @@ Todo:
 def add_access(operation, domain_name, type_name):
     # check if domain and type are not null
     if domain_name == "":
-        print("Domain name is empty")
-        exit()
+        print("Error: Domain name is empty")
+        return
     if type_name == "":
-        print("Type name is empty")
-        exit()
+        print("Error: Type name is empty")
+        return
     if operation == "":
-        print("Operation is empty")
-        exit()
+        print("Error: Operation is empty")
+        return
 
     # Check if domain name exists
     if not check_domain( domain_name ):
@@ -364,10 +418,10 @@ def add_access(operation, domain_name, type_name):
         try:
             domains = json.load( f )
             # add to domains (dont have to check if it exists bc we already did)
-            domains[domain_name] = { "Name" : domain_name, "AccessPermissions" : [], "Users" : []}
+            domains[domain_name] = { "Name" : domain_name, "Users" : []}
         except JSONDecodeError:
             # emtpy file
-            domains = { domain_name : { "Name" : domain_name, "AccessPermissions" : [], "Users" : []} }
+            domains = { domain_name : { "Name" : domain_name, "Users" : []} }
         f = open( "./tables/domains.json", "w+" )
         json.dump( domains, f, indent=5 )
 
@@ -440,23 +494,23 @@ Todo:
 def can_access(operation, username, object_name):
     
     if username == "":
-        print("Username is empty")
-        exit()
+        print("Error: Username is empty")
+        return
     if object_name == "":
-        print("Object name is empty")
-        exit()
+        print("Error: Object name is empty")
+        return
     if operation == "":
-        print("Operation name is empty")
-        exit()
+        print("Error: Operation name is empty")
+        return
 
     # check if the file exists
     if not path.exists( './tables/users.json' ):
         open( "./tables/users.json", "w+" )
-        exit()
+        return
 
     if not check_user(username):
-        print("Username is not valid")
-        exit()
+        print("Error: Username is not valid")
+        return
 
     # Check what domains the user is a part of
     f = open( "./tables/users.json", "r" )
@@ -467,18 +521,18 @@ def can_access(operation, username, object_name):
 
     except JSONDecodeError:
         # file is empty
-        print("Username is not valid")
-        exit()
+        print("Error: Username is not valid")
+        return
 
 
     # check if the file exists
     if not path.exists( './tables/permissions.json' ):
         open( "./tables/permission.json", "w+" )
-        exit()
+        return
 
     if not check_permission(operation):
-        print("Operation is not valid")
-        exit()
+        print("Error: Operation is not valid")
+        return
 
     # check what domains are associated with that operation
     f = open( "./tables/permissions.json", "r" )
@@ -489,8 +543,8 @@ def can_access(operation, username, object_name):
 
     except JSONDecodeError:
         # file is empty
-        print("Operaton is not valid")
-        exit()
+        print("Error: Operaton is not valid")
+        return
         
     # check which of the user_domains are in permission domains
     shared_domains = []
@@ -514,7 +568,7 @@ def can_access(operation, username, object_name):
     # check if the file exists
     if not path.exists( './tables/types.json' ):
         open( "./tables/types.json", "w+" )
-        exit()
+        return
     
     # get types
     f = open( "./tables/types.json", "r" )
@@ -523,14 +577,14 @@ def can_access(operation, username, object_name):
 
     except JSONDecodeError:
         # file is empty
-        print("Object is not valid")
-        exit()
+        print("Error: Object is not valid")
+        return
 
     # go through all of the shared types and see if object exists in it
     for _type in shared_types:
         if object_name in types[_type]["Objects"]:
             print("Success")
-            exit()
+            return
     print("Error: Access Denied")
 
 
