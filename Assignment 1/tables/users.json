@@ -24,12 +24,18 @@
           "UserName": "Alfonso",
           "Password": "Butts",
           "Domains": [
-               "admin"
+               "admin",
+               "test3"
           ]
      },
      "Kuber": {
           "UserName": "Kuber",
           "Password": "",
+          "Domains": []
+     },
+     "''": {
+          "UserName": "''",
+          "Password": "test",
           "Domains": []
      }
 }

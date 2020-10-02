@@ -17,5 +17,14 @@
                     "comedy"
                ]
           }
+     },
+     "test": {
+          "Name": "test",
+          "Domains": {
+               "kings": [
+                    "pp",
+                    "fake"
+               ]
+          }
      }
 }

@@ -27,5 +27,15 @@
      "losers": {
           "Name": "losers",
           "Users": []
+     },
+     "kings": {
+          "Name": "kings",
+          "Users": []
+     },
+     "test3": {
+          "Name": "test3",
+          "Users": [
+               "Alfonso"
+          ]
      }
 }

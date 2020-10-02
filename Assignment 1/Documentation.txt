@@ -1,0 +1,174 @@
+Alfonso Buono
+Computer Security
+Paul Krzyzanowski
+Assignment 1
+
+Running the Code:
+    Since I use python 3, on the ilab you will need to utilize python3 as python links to
+    python 2.
+    An example on how to call the AddUser function is seen below:
+
+    "python3 portal.py "AddUser" "Alfonso" "password"
+
+    This should invoke the AddUser command and create some JSON files that stores the information
+    that has been added using these files.
+
+Commands / Functions:
+
+    AddUser:
+        Description:
+            Defines a new user with the new password.
+
+        TestCases:
+            1)
+            AddUser "Alfonso" "password"
+            Expected Output: Success
+
+            2)
+            AddUser "" "password"
+            Expected Output: Error: No username
+
+            3)
+            AddUser "Alfonso" ""
+            Expected Output: Success
+
+    Authenticate:
+        Description:
+            Validate a user’s password by passing the username and password, both strings.
+
+        TestCases:
+            1)
+            Authenticate "Alfonso" "password"
+            Expected Output: Success
+
+            2)
+            Authenticate "Alfonso" "badpassword"
+            Expected Output: Error: bad password
+
+            3)
+            Authenticate "Fake user" "password"
+            Expected Output: Error: no such password
+
+    SetDomain:
+        Description: 
+            Assign a user to a domain.
+            
+        TestCases:
+            1)
+            SetDomain "Alfonso" "admins"
+            Expected Output: Success
+
+            2)
+            SetDomain "FakeUser" "admins"
+            Expected Output: Error: no such user
+
+            3)
+            SetDomain "Alfonso" ""
+            Expected Output: Error: missing domain
+        
+
+    DomainInfo:
+        Description:
+            List all the users in a domain.
+
+        TestCases:
+            1)
+            DomainInfo "admins"
+            Expected Output:
+                Alfonso
+                root
+            
+            2)
+            DomainInfo ""
+            Expected Output: Error: missing domain
+
+            3)
+            DomainInfo "empty"
+            Expected Output:
+        
+
+    SetType:
+        Description:
+            Assign a type to an object.
+
+        TestCases:
+            1)
+            SetType "Iron Man" "Marvel"
+            Expected Output: Success
+
+            2)
+            SetType "Iron Man" ""
+            Expected Output: Error: type name empty
+
+            3)
+            SetType "" "Marvel"
+            Expected Output: Error: object name empty
+
+            4)
+            SetType "" ""
+            Expected Output: Error: object empty
+            (Object name is checked first)
+
+    TypeInfo:
+        Description:
+            List all the objects that have a specific type, one per line.
+
+        TestCases:
+            1)
+            TypeInfo "Marvel"
+            Expected Output:
+                Iron Man
+                Spider Man
+            
+            2)
+            TypeInfo ""
+            Expected Output: Error: missing type
+
+            3)
+            TypeInfo "empty"
+            Expected Output:
+        
+    AddAccess:
+        Description:
+            Define an access right: a string that defines an access permission of a domain to an object.
+
+        TestCases:
+            1)
+            AddAccess "view" "admins" "marvel"
+            Expected Output: Success
+
+            2)
+            AddAccess "" "" ""
+            Expected Output: Error: operation empty
+
+            3) 
+            Similar to (2) but every permutation of just one or two of the parameters
+            missing
+
+    CanAccess:
+        Description:
+            Test whether a user can perform a specified operation on an object.
+            
+        TestCases:
+            1)
+            CanAccess "view" "Alfonso" "Iron Man"
+            Expected Output: Success
+
+            2)
+            CanAccess "" "Alfonso" "Iron Man"
+            Expected Output: Error: operation empty
+
+            3)
+            CanAccess "view" "Alfonso" "NoConnection"
+            Expected Output: Error: access denied
+            (Assuming the domains that Alfonso has does not have permission for the
+            types that "NoConnection" has)
+
+            4)
+            CanAccess "view" "" "Iron Man"
+            Expected Output: Error: user empty
+
+            5)
+            CanAccess "view" "Alfonso" ""
+            Expected Output: Error: object empty
+

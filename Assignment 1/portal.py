@@ -2,9 +2,15 @@ import sys
 import json
 from json.decoder import JSONDecodeError
 from os import path
+import os
 
+tables_path = "./tables"
 
 def main():
+
+    # check if the tables folder exists
+    if not path.exists(tables_path):
+        os.mkdir(tables_path)
 
     # error check argument lengths?
     if len(sys.argv) < 2:
@@ -143,6 +149,7 @@ Returns:
 Todo:
 '''
 def add_user(username, password):
+
     # check if username is blank
     if username == "":
         print("Error: Empty username")
@@ -191,6 +198,12 @@ Returns:
 Todo:
 '''
 def authenticate(username, password):
+
+    # check if username is empty
+    if username == "":
+        print("Error: Empty username")
+        return
+
     # check if the file exists
     if not path.exists( './tables/users.json' ):
         print("Error: No such user")
