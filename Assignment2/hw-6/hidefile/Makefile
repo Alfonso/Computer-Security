@@ -13,6 +13,8 @@ test:	all
 	export HIDDEN=secret-1.txt LD_PRELOAD=$$PWD/hidefile.so; ls -l
 	@ echo "hiding secret-2"
 	export HIDDEN=secret-2.txt LD_PRELOAD=$$PWD/hidefile.so; ls -l
+	@ echo "hiding both"
+	export HIDDEN=secret-1.txt:secret-2.txt LD_PRELOAD=$$PWD/hidefile.so; ls -l
 	@ echo "hiding nothing"
 	unset HIDDEN
 	LD_PRELOAD=$$PWD/hidefile.so; ls -l
