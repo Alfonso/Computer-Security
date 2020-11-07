@@ -39,10 +39,9 @@ def pad( m ):
     if not( last >= 0 and last <= BLOCK_SIZE):
         return m
 
-    print(last)
     res = []
     for idx in range( BLOCK_SIZE - 1, -1, -1 ):
-        print('m: {}, bound: {}, idx: {}'.format(m[idx], BLOCK_SIZE - last, idx))
+        #print('m: {}, bound: {}, idx: {}'.format(m[idx], BLOCK_SIZE - last, idx))
         if m[idx] != last or idx < BLOCK_SIZE - last:
             res.insert(0, m[idx])
 
@@ -97,47 +96,53 @@ def main():
     # calculate total num of bytes in file
     total_bytes = os.stat(sys.argv[2]).st_size
     bytes_read = 0
+    prev_m = None
 
     # read data block by block
     while run:
         # we want to read BLOCK_SIZE bytes
         m = start_file.read( BLOCK_SIZE )
         bytes_read += len(m)
-        print('m: {}'.format(list(m)))
+        #print('m: {}'.format(list(m)))
         # xor plain and iv / old cipher
         if first:
             # XOR
             # Gen new key_stream
             key_stream = create_IV( iv[-1] )
-            print('keystream: {}'.format(key_stream))
+            #print('keystream: {}'.format(key_stream))
             # xor plain and key stream
             temp = xor( m, key_stream )
         else:
             key_stream = create_IV( key_stream[-1] )
-            print('keystream: {}'.format(key_stream))
+            #print('keystream: {}'.format(key_stream))
             # XOR
             temp = xor( m, key_stream )
         
-        print('temp: {}'.format(list(temp)))
+        #print('temp: {}'.format(list(temp)))
         # swap using key stream
         swap = bs( temp, key_stream )
 
-        print('swap: {}'.format(list(swap)))
+        #print('swap: {}'.format(list(swap)))
 
         if first:
             first = False
             cipher = xor(swap, iv)
         else:
-            print('prev cipher: {}'.format(list(cipher)))
-            cipher = xor( swap, cipher )
+            cipher = xor(swap, prev_m)
 
-        print('cipher: {}\n'.format(list(cipher)))
+        #print('cipher: {}'.format(list(cipher)))
 
          # check if at end
         if bytes_read == total_bytes:
+            #print('after pad: {}'.format(list(cipher)))
             # pad
             cipher = pad( cipher )
             run = False
+
+        # get prev text
+        prev_m = m
+
+        #print()
 
         # write cipher
         end_file.write( cipher )
