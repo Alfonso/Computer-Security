@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import sys
 
 def make_key_file():
