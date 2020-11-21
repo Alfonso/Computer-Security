@@ -6,7 +6,8 @@ hex_dict = { '0': 4, '1': 3, '2':2, '3':2, '4':1, '5':1, '6':1, '7':1, '8':0, '9
 
 def get_hash(str):
     m = hashlib.sha256()
-    m.update(bytes(str, 'utf-8'))
+    # m.update(bytes(str, 'utf-8')) # I did this when reading it in as r instead of rb mode
+    m.update(str)
     return m.hexdigest()
 
 def check_leading(nbits, hash):
@@ -18,6 +19,14 @@ def check_leading(nbits, hash):
     remaining_zero = nbits % 4
     
     return hex_dict[ hash[leading_char_zero] ] >= remaining_zero
+
+def get_leading(nbits, hash):
+    # each 0 char is 
+    leading_char_zero = nbits // 4
+    if hash[:leading_char_zero] != ''.join(['0' for _ in range(leading_char_zero)]):
+        return -1
+    
+    return hex_dict[ hash[leading_char_zero] ] + nbits
 
 def work_back(work, length):
 
@@ -51,7 +60,7 @@ def gen_work(nbits, hash):
     length = 0
     iteration = 1
     new_mes = "".join(work) + hash
-    new_hash = get_hash( new_mes )
+    new_hash = get_hash( str.encode(new_mes) )
     while not check_leading( nbits, new_hash ):
         char += 1
         if char > 126:
@@ -61,7 +70,7 @@ def gen_work(nbits, hash):
             work[length] = chr(char)
         
         new_mes = "".join(work) + hash
-        new_hash = get_hash( new_mes )
+        new_hash = get_hash( str.encode(new_mes) )
         iteration += 1
 
     # work, hash, iteration
@@ -87,7 +96,7 @@ def main():
     file_name = sys.argv[2]
 
     # error check for file
-    f = open(file_name, 'r')
+    f = open(file_name, 'rb')
     if not f:
         print('File cannot open')
         return -1
@@ -100,12 +109,16 @@ def main():
     work, new_hash, iterations = gen_work(nbits, initial_hash)
     compute_time = time.time() - start
 
+
+    # I could calculate the number of leading 0s during it but that might add time
+    leading = get_leading( nbits, new_hash )
+
     # outputs
     print('File: {}'.format( file_name ))
     print('Initial-hash: {}'.format( initial_hash ))
     print('Proof-of-work: {}'.format( "".join(work) ))
     print('Hash: {}'.format( new_hash ))
-    print('Leading-bits: {}'.format( nbits ))               #FIXME have to print the actual number of leading bits
+    print('Leading-bits: {}'.format( leading ))
     print('Iterations: {}'.format( iterations ))
     print('Compute-time: {}'.format( compute_time ))
 
