@@ -74,9 +74,19 @@ def main():
         print('Please input correct number of args')
         return -1
 
-    nbits = int(sys.argv[1])
+    # error check for nbits
+    try:
+        nbits = int(sys.argv[1])
+        if nbits < 0:
+            print('Please input a proper integer value for nbits')
+            return -1
+    except:
+        print('Please input a proper integer value for nbits')
+        return -1
+
     file_name = sys.argv[2]
 
+    # error check for file
     f = open(file_name, 'r')
     if not f:
         print('File cannot open')
@@ -93,7 +103,7 @@ def main():
     # outputs
     print('File: {}'.format( file_name ))
     print('Initial-hash: {}'.format( initial_hash ))
-    print('Proof-of-work: {}'.format( work ))
+    print('Proof-of-work: {}'.format( "".join(work) ))
     print('Hash: {}'.format( new_hash ))
     print('Leading-bits: {}'.format( nbits ))               #FIXME have to print the actual number of leading bits
     print('Iterations: {}'.format( iterations ))
