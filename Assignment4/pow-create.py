@@ -21,12 +21,13 @@ def check_leading(nbits, hash):
     return hex_dict[ hash[leading_char_zero] ] >= remaining_zero
 
 def get_leading(nbits, hash):
-    # each 0 char is 
-    leading_char_zero = nbits // 4
-    if hash[:leading_char_zero] != ''.join(['0' for _ in range(leading_char_zero)]):
-        return -1
+    num_leading = 0
+    for char in hash:
+        if char != '0':
+            break
+        num_leading += 4
     
-    return hex_dict[ hash[leading_char_zero] ] + nbits
+    return num_leading + hex_dict[ num_leading // 4 ]
 
 def work_back(work, length):
 

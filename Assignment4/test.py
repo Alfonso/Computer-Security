@@ -1,3 +1,6 @@
+from itertools import chain, combinations_with_replacement
+import time
+
 def work_back(work, length):
 
     go_back = 1
@@ -18,10 +21,15 @@ def work_back(work, length):
 
     return work, length
 
-work = [chr(126), chr(126), chr(126)]
-print(work)
-length = 2
-work, length = work_back(work, length)
-print(work)
-work, length = work_back(work, length)
-print("{} {}".format(work,length))
+def powerset(iterable, length):
+    "powerset([1,2,3]) --> () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
+    return chain.from_iterable(combinations_with_replacement(iterable, r) for r in range(length, length + 1))
+
+
+iterable = [ chr(i) for i in range(33, 127) ]
+start = time.time()
+#print( list(powerset( iterable, 3 )) )
+ret = list(powerset( iterable, 4 ))
+end = time.time()
+#print(ret)
+print( end - start )
