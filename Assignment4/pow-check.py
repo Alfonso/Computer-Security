@@ -4,7 +4,6 @@ import hashlib
 hex_dict = { '0': 4, '1': 3, '2':2, '3':2, '4':1, '5':1, '6':1, '7':1, '8':0, '9':0, 'a':0, 'b':0, 'c':0, 'd':0, 'e':0,'f':0 }
 
 def get_hash(str):
-    print(str)
     m = hashlib.sha256()
     # m.update(bytes(str, 'utf-8')) # I did this when reading it in as r instead of rb mode
     m.update(str)
@@ -17,7 +16,7 @@ def get_leading(hash):
             break
         num_leading += 4
     
-    return num_leading + hex_dict[ hash[ num_leading // 4 ] ]
+    return num_leading + hex_dict[ char ]
 
 def main():
     if len( sys.argv ) != 3:
@@ -46,19 +45,19 @@ def main():
         # try to find the matching substrings
         if 'INITIAL-HASH: ' in line.upper():
             # find the initial_hash they gave us
-            init_given_hash = line.upper().replace('INITIAL-HASH: ', '').lower().strip()
+            init_given_hash = line[ line.find(':')+2: ].strip()
             #print(line, end='')
 
         elif 'PROOF-OF-WORK: ' in line.upper():
-            work = line.upper().replace('PROOF-OF-WORK: ', '').lower().strip()
+            work = line[ line.find(':')+2: ].strip()
             #print(line,end='')
 
         elif 'HASH: ' in line.upper():
-            final_given_hash = line.upper().replace('HASH: ', '').lower().strip()
+            final_given_hash = line[ line.find(':')+2: ].strip()
             #print(line,end='')
 
         elif 'LEADING-BITS: ' in line.upper():
-            given_leading = line.upper().replace('LEADING-BITS: ', '').lower().strip()
+            given_leading = line[ line.find(':')+2: ].strip()
             #print(line,end='')
 
             
@@ -87,18 +86,18 @@ def main():
     final_mes = work + init_given_hash
     final_calc_hash = get_hash( str.encode( final_mes ) )
     
-
-    print('given init: {}'.format(init_given_hash))
-    print('calc init: {}'.format(init_calc_hash))
-    print('given: {}'.format(final_given_hash))
-    print('calc: {}'.format(final_calc_hash))
-
     if final_given_hash != final_calc_hash:
         print('Final hash does not match')
         return -1
 
     # calc num leading bits
     calc_leading = get_leading( final_given_hash )
+    # need to try to cast leading bits to int
+    try:
+        given_leading = int(given_leading)
+    except ValueError:
+        print('Given leading bits is not a valid num')
+        return -1
 
     if calc_leading != given_leading:
         print('Leading bits does not match')
