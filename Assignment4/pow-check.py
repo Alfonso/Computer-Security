@@ -17,7 +17,7 @@ def get_leading(hash):
             break
         num_leading += 4
     
-    return num_leading + hex_dict[ char ]
+    return num_leading + hex_dict[ char.lower() ]
 
 def main():
     if len( sys.argv ) != 3:

@@ -28,7 +28,7 @@ def get_leading(nbits, hash):
             break
         num_leading += 4
     
-    return num_leading + hex_dict[ hash[ num_leading // 4 ] ]
+    return num_leading + hex_dict[ hash[ num_leading // 4 ].lower() ]
 
 def work_back(work, length):
 
